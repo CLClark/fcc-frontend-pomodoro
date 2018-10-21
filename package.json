@@ -1,0 +1,19 @@
+{
+  "name": "pomodoro-clock",
+  "version": "1.0.0",
+  "description": "FCC Frontend Project: Pomodoro Clock",
+  "main": "server.js",
+  "scripts": {
+    "test": "node server.js"
+  },
+  "keywords": [
+    "fcc",
+    "freecodecamp",
+    "javascript",
+    "node.js",
+    "react",
+    "frontend"
+  ],
+  "author": "CLClark",
+  "license": "ISC"
+}
