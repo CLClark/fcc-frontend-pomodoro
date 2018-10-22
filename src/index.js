@@ -27,9 +27,10 @@ class Timer extends React.Component {
 		super(props);
 		this.state = {
 			running: false,
-			sessBreak: "session",
-			breakLength: 5,
-			sessLength: 25
+			session: "session",
+			break: 5,
+			sessLength: 25,
+			timeLeft: (3)
 		}
 		this.reset = this.reset.bind(this);
 		this.switcher = this.switcher.bind(this);
@@ -37,12 +38,21 @@ class Timer extends React.Component {
 		this.lengths = this.lengths.bind(this);
 		this.startStop = this.startStop.bind(this);
 	}
-	reset(){
+	reset(){		
 		//set session-length
 		//set break-length
+		this.setState(prevState => {
+			return {
+				sessBreak: "session",
+				break: 5,
+				session: 25,
+				timeLeft: (25*60)
+			};			
+		},() => { //after setting break/session lengths
+			//force a reset on timer
+			this.startStop(true);	
+		});
 		//stop/.load() beep
-		//set timer.running = false
-		///set timer session: switch() fn
 	}
 	lengths(which, what){
 		//which = "break" or "session"
@@ -50,7 +60,7 @@ class Timer extends React.Component {
 		console.log(which + " " + what);
 		switch (which) {
 			case "break":
-				let nowBreak = this.state.breakLength;
+				let nowBreak = this.state.break;
 				let nowUp; let nowDown;
 				if( what == "decrement" && nowBreak == 0){
 					nowDown = 0; } else {
@@ -60,53 +70,92 @@ class Timer extends React.Component {
 					nowUp =  60;  } else {
 					nowUp =(nowBreak + 1) }
 				(what == "increment") ?
-					this.setState({ breakLength: nowUp }) :  
-					this.setState({ breakLength: nowDown });
+					this.setState({ break: nowUp }) :  
+					this.setState({ break: nowDown });
 				break;	
 			default: //"session"
-				let nowSession = this.state.sessLength;
+				let nowSession = this.state.session;
 				let sessUp; let sessDown;
 				if( what == "decrement" && nowSession == 0){ sessDown = 0; } else {
 					sessDown = (nowSession - 1);				}
 				if( what == "increment" && nowSession == 60){ sessUp =  60; } else {
 					sessUp =(nowSession + 1); 				}
 				(what == "increment") ?
-					this.setState({ sessLength: sessUp }) :  
-					this.setState({ sessLength: sessDown });
+					this.setState({ session: sessUp }) :  
+					this.setState({ session: sessDown });
 				break;
 		}			
 	}
 	switcher () {
 		//if "session" > pull session-length prop
+		this.setState(prevState => {
+			let which;
+			let newTime;
+			(prevState.sessBreak == "session") ? which = "break" : which = "session";
+			(prevState.sessBreak == "session") ? newTime = prevState.break : newTime = prevState.session;
+			console.log(newTime);
+			return { 
+				sessBreak: which,
+				timeLeft: newTime
+			};
+		});
 		//if "break" > pull break-length prop
 	}
-	startStop (){
-		//sets timer to paused or running
-		this.setState({ running: !this.state.running },() => {
-			console.log('running: ' + this.state.running);
-			if(this.state.running == true){ //start the countdown
+	startStop (forceReset){
+		//sets timer to paused or running; ternary
+		(forceReset == true ) ?
+		//forceReset 
+		this.setState(prevState => {
+			this.ticker("tock");//stop the timer
+			return { running: false };
+		}, () => {
+			console.log('forced reset');
+		}) :
+		this.setState(prevState => {
+			console.log('running was: ' + prevState.running);
+			if (prevState.running == false) { //start the countdown
 				this.ticker("tick");				
-			}else{ this.ticker("tock") } //stop the countdown
+			} else {
+				this.ticker("tock");				
+			} //stop the countdown
+			return { running: !prevState.running };
+		}, () => {
+			console.log('running is: ' + this.state.running);
 		});
 	}
 	ticker(tickOrTock){
-		//when this.state.status == "running" > decrement "time-left" by 1 each 1000ms (stop at 00:00)
+		//when this.state.status == "running" > decrement "time-left" by 1 each 1000ms (stop at 00:00)		
 		switch (tickOrTock) {
 			case "tick":
 				//start the timer on "time-left"
+				//set time-left to update on render
+				this.tickInterval = window.setInterval(tickDown.bind(this), 1000);		
 				break;
 			default:
 				//stop the timer
+				window.clearInterval(this.tickInterval);
+				//set time-left to not update on render
 				break;
+		}//switch
+		function tickDown() {
+			this.setState(prevState => {
+				console.log(prevState.timeLeft);
+				return { timeLeft: (prevState.timeLeft-1) };
+			}, () => {
+				if(this.state.timeLeft == 0){
+					this.switcher();
+				}
+			});
 		}
 	}
+
 	render() { 
 		return (
 			<div id="clock-wrap">
 				<Display timeLeft={"00:00"} timerLabel={this.state.sessBreak} />
 				<StartStop startStop={this.startStop} />
-				<BreakHandler lengthControls={this.lengths} breakLength={this.state.breakLength}/>
-				<SessionHandler lengthControls={this.lengths} sessionLength={this.state.sessLength} />
+				<BreakHandler lengthControls={this.lengths} breakLength={this.state.break}/>
+				<SessionHandler lengthControls={this.lengths} sessionLength={this.state.session} />
 				<Beep />
 			</div>
 		);
