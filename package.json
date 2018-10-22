@@ -1,19 +1,31 @@
 {
-  "name": "pomodoro-clock",
-  "version": "1.0.0",
-  "description": "FCC Frontend Project: Pomodoro Clock",
-  "main": "server.js",
-  "scripts": {
-    "test": "node server.js"
-  },
-  "keywords": [
-    "fcc",
-    "freecodecamp",
-    "javascript",
-    "node.js",
-    "react",
-    "frontend"
-  ],
-  "author": "CLClark",
-  "license": "ISC"
+	"name": "pomodoro-clock",
+	"version": "1.0.0",
+	"description": "FCC Frontend Project: Pomodoro Clock",
+	"main": "server.js",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/CLClark/"
+	},
+	"scripts": {
+		"test": "node server.js"
+	},
+	"keywords": [
+		"fcc",
+		"freecodecamp",
+		"javascript",
+		"node.js",
+		"react",
+		"frontend"
+	],
+	"authors": "CLClark",
+	"license": "MIT",
+	"dependencies": {
+		"express": "^4.16.4"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.1.2",
+		"@babel/core": "^7.1.2",
+		"@babel/plugin-transform-react-jsx": "^7.0.0"
+	}
 }
