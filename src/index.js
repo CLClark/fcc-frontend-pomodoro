@@ -35,6 +35,7 @@ class Timer extends React.Component {
 		this.switcher = this.switcher.bind(this);
 		this.ticker = this.ticker.bind(this);
 		this.lengths = this.lengths.bind(this);
+		this.startStop = this.startStop.bind(this);
 	}
 	reset(){
 		//set session-length
@@ -45,20 +46,35 @@ class Timer extends React.Component {
 	}
 	lengths(which, what){
 		//which = "break" or "session"
+		//what = "increment or "decrement"
+		console.log(which + " " + what);
 		switch (which) {
 			case "break":
+				let nowBreak = this.state.breakLength;
+				let nowUp; let nowDown;
+				if( what == "decrement" && nowBreak == 0){
+					nowDown = 0; } else {
+					nowDown = (nowBreak - 1)
+				}
+				if( what == "increment" && nowBreak == 60){
+					nowUp =  60;  } else {
+					nowUp =(nowBreak + 1) }
 				(what == "increment") ?
-					this.setState({ breakLength: (this.breakLength + 1) }) :  
-					this.setState({ breakLength: (this.breakLength - 1) });
-				break;		
+					this.setState({ breakLength: nowUp }) :  
+					this.setState({ breakLength: nowDown });
+				break;	
 			default: //"session"
+				let nowSession = this.state.sessLength;
+				let sessUp; let sessDown;
+				if( what == "decrement" && nowSession == 0){ sessDown = 0; } else {
+					sessDown = (nowSession - 1);				}
+				if( what == "increment" && nowSession == 60){ sessUp =  60; } else {
+					sessUp =(nowSession + 1); 				}
 				(what == "increment") ?
-					this.setState({ sessLength: (this.sessLength + 1) }) :  
-					this.setState({ sessLength: (this.sessLength - 1) });
+					this.setState({ sessLength: sessUp }) :  
+					this.setState({ sessLength: sessDown });
 				break;
-		}
-		//what = "increment or "decrement"
-		console.log(which + " " + what);		
+		}			
 	}
 	switcher () {
 		//if "session" > pull session-length prop
@@ -140,8 +156,8 @@ class BreakHandler extends React.Component {
 		<div>
 			<div id="break-label">BREAK</div>
 			<div id="break-length">{this.props.breakLength}</div>
-			<div id="break-increment" onClick={this.incrementer()}></div>			
-			<div id="break-decrement" onClick={this.decrementer()}></div>			
+			<div id="break-increment" onClick={this.incrementer}>breakincrement</div>			
+			<div id="break-decrement" onClick={this.decrementer}>breakdecrement</div>			
 		</div>);
 	}
 }
@@ -163,10 +179,10 @@ class SessionHandler extends React.Component {
 	render() { 
 		return (
 		<div>
-			<div id="session-label">session</div>
+			<div id="session-label">SESSION</div>
 			<div id="session-length">{this.props.sessionLength}</div>
-			<div id="session-increment" onClick={this.incrementer()}></div>			
-			<div id="session-decrement" onClick={this.decrementer()}></div>			
+			<div id="session-increment" onClick={this.incrementer}>sessionincrement</div>			
+			<div id="session-decrement" onClick={this.decrementer}>sessiondecrement</div>			
 		</div>);
 	}
 }
