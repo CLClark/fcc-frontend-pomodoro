@@ -1,4 +1,4 @@
-// import PropTypes from 'prop-types';
+//TODO: fix the number/sec/minute conversions
 
 //id "pomo-wrap"
 
@@ -27,9 +27,9 @@ class Timer extends React.Component {
 		super(props);
 		this.state = {
 			running: false,
-			session: "session",
+			sessBreak: "session",
 			break: 5,
-			sessLength: 25,
+			session: 25,
 			timeLeft: (3)
 		}
 		this.reset = this.reset.bind(this);
@@ -93,7 +93,7 @@ class Timer extends React.Component {
 			let newTime;
 			(prevState.sessBreak == "session") ? which = "break" : which = "session";
 			(prevState.sessBreak == "session") ? newTime = prevState.break : newTime = prevState.session;
-			console.log(newTime);
+			// console.log(newTime);
 			return { 
 				sessBreak: which,
 				timeLeft: newTime
@@ -142,7 +142,7 @@ class Timer extends React.Component {
 				console.log(prevState.timeLeft);
 				return { timeLeft: (prevState.timeLeft-1) };
 			}, () => {
-				if(this.state.timeLeft == 0){
+				if(this.state.timeLeft < 0){
 					this.switcher();
 				}
 			});
@@ -152,7 +152,7 @@ class Timer extends React.Component {
 	render() { 
 		return (
 			<div id="clock-wrap">
-				<Display timeLeft={"00:00"} timerLabel={this.state.sessBreak} />
+				<Display timeLeft={this.state.timeLeft} timerLabel={this.state.sessBreak} />
 				<StartStop startStop={this.startStop} />
 				<BreakHandler lengthControls={this.lengths} breakLength={this.state.break}/>
 				<SessionHandler lengthControls={this.lengths} sessionLength={this.state.session} />
