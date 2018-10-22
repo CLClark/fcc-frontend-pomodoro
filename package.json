@@ -21,6 +21,7 @@
 	"authors": "CLClark",
 	"license": "MIT",
 	"dependencies": {
+		"@babel/plugin-proposal-class-properties": "^7.1.0",
 		"express": "^4.16.4"
 	},
 	"devDependencies": {
