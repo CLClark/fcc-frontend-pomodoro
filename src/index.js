@@ -1,6 +1,5 @@
 //TODO: fix the number/sec/minute conversions
 
-//id "pomo-wrap"
 
 /* 
 
@@ -20,7 +19,14 @@ id="start_stop"
 id="reset"
 
 */
-
+const bodyStyle = {
+	margin: "auto",
+	width: "40%",
+	//height: "50%",
+	border: "3px solid green",
+	textAlign: "center",
+	backgroundImage: "linear-gradient(#f3f4f9, #9e9495)"
+}
 
 class Timer extends React.Component {
 	constructor(props) {
@@ -30,7 +36,7 @@ class Timer extends React.Component {
 			sessBreak: "session",
 			break: 5,
 			session: 25,
-			timeLeft: (3)
+			timeLeft: (25*60)
 		}
 		this.reset = this.reset.bind(this);
 		this.switcher = this.switcher.bind(this);
@@ -62,8 +68,8 @@ class Timer extends React.Component {
 			case "break":
 				let nowBreak = this.state.break;
 				let nowUp; let nowDown;
-				if( what == "decrement" && nowBreak == 0){
-					nowDown = 0; } else {
+				if( what == "decrement" && nowBreak == 1){
+					nowDown = 1; } else {
 					nowDown = (nowBreak - 1)
 				}
 				if( what == "increment" && nowBreak == 60){
@@ -76,7 +82,7 @@ class Timer extends React.Component {
 			default: //"session"
 				let nowSession = this.state.session;
 				let sessUp; let sessDown;
-				if( what == "decrement" && nowSession == 0){ sessDown = 0; } else {
+				if( what == "decrement" && nowSession == 1){ sessDown = 1; } else {
 					sessDown = (nowSession - 1);				}
 				if( what == "increment" && nowSession == 60){ sessUp =  60; } else {
 					sessUp =(nowSession + 1); 				}
@@ -96,7 +102,7 @@ class Timer extends React.Component {
 			// console.log(newTime);
 			return { 
 				sessBreak: which,
-				timeLeft: newTime
+				timeLeft: (newTime*60)
 			};
 		});
 		//if "break" > pull break-length prop
@@ -151,29 +157,44 @@ class Timer extends React.Component {
 
 	render() { 
 		return (
-			<div id="clock-wrap">
+			<div id="clock-wrap"  style={bodyStyle}>
 				<Display timeLeft={this.state.timeLeft} timerLabel={this.state.sessBreak} />
 				<StartStop startStop={this.startStop} />
 				<BreakHandler lengthControls={this.lengths} breakLength={this.state.break}/>
 				<SessionHandler lengthControls={this.lengths} sessionLength={this.state.session} />
+				<div id="reset" onClick={this.reset}>RESET</div>
 				<Beep />
 			</div>
 		);
 	}
 }//Timer
 Timer.propTypes = {}
-// // export default Timer;
 
 class Display extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {  }
 	}
+	convertSeconds = (seconds) => {
+		let secondsIn = Number.parseInt(seconds);
+
+		let minutes;
+		( Math.floor(secondsIn/60) > 9) ?
+		minutes  = Math.floor(secondsIn/60):
+		minutes = ("0" + Math.floor(secondsIn/60));
+
+		let secondsLeft;
+		(Math.floor(secondsIn%60) > 9) ?			
+			secondsLeft = Math.floor(secondsIn%60):
+			secondsLeft = ("0" + Math.floor(secondsIn%60));
+
+		return ( minutes + ":" + secondsLeft );
+	}
 	render() { 
 		return (
 		<div id="display">
 			<div id="timer-label">{this.props.timerLabel}</div>
-			<div id="time-left">{this.props.timeLeft}</div>
+			<div id="time-left">{this.convertSeconds(this.props.timeLeft)}</div>
 		</div> );
 	}
 } 
