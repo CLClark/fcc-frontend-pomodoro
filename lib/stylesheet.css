@@ -1,0 +1,12 @@
+.actionButton:hover{
+	cursor: pointer;
+	/* opacity: 0.5; */
+	border-color: lightblue;
+	/* border-width: 2px; */
+}
+.actionButton:active{
+	border: 4px inset white
+}
+.actionButton{
+	border: 4px inset transparent;	
+}
