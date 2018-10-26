@@ -145,7 +145,8 @@ class Timer extends React.Component {
 			};			
 		},() => { //after setting break/session lengths
 			//force a reset on timer
-			this.startStop(true);			
+			this.startStop(true);	
+			document.getElementById("display").style.backgroundColor = "#ff3716" ;		
 		});				
 	}
 	lengths(which, what){
@@ -188,7 +189,7 @@ class Timer extends React.Component {
 			(prevState.sessBreak == "SESSION") ? which = "BREAK" : which = "SESSION";
 			(prevState.sessBreak == "SESSION") ? newTime = prevState.break : newTime = prevState.session;
 			//some GUI indication:
-			(prevState.sessBreak == "SESSION") ? document.getElementById("display").style.backgroundColor = "lightblue" : document.getElementById("display").style.backgroundColor = "red" ;
+			(prevState.sessBreak == "SESSION") ? document.getElementById("display").style.backgroundColor = "lightblue" : document.getElementById("display").style.backgroundColor = "#ff3716" ;
 			return { 
 				sessBreak: which,
 				timeLeft: (newTime*60)
